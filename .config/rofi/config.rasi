@@ -1,0 +1,92 @@
+//==================================
+//
+//
+//   ██████╗  ██████╗ ███████╗██╗
+//   ██╔══██╗██╔═══██╗██╔════╝██║
+//   ██████╔╝██║   ██║█████╗  ██║
+//   ██╔══██╗██║   ██║██╔══╝  ██║
+//   ██║  ██║╚██████╔╝██║     ██║
+//   ╚═╝  ╚═╝ ╚═════╝ ╚═╝     ╚═╝
+// ===Kaucrow - gruvbox-material===
+//
+//==================================
+
+/** Basic config file **/
+
+configuration {
+  display-drun: "Run:";
+  display-window: "Windows:";
+  drun-display-format: "{icon} {name}";
+  font: "Hermit Regular 10";
+  modi: "drun";
+  show-icons:         true;
+  icon-theme:         "Gruvbox-Material-Dark";
+}
+
+@theme "/dev/null"
+
+* {
+  bg: #232323;
+  bg-alt: #1e1e1e; 
+
+  fg: #dfbf8e;
+  fg-alt: #af8f5e;
+
+  background-color: @bg;
+
+  border: 0;
+  margin: 0;
+  padding: 0;
+  spacing: 0;
+}
+
+window {
+  width: 25%;
+}
+
+element {
+  padding: 12;
+  text-color: @fg-alt;
+}
+
+element selected {
+  text-color: @fg;
+}
+
+element-text {
+  background-color: inherit;
+  text-color: inherit;
+  vertical-align: 0.5;
+}
+
+element-icon {
+  size: 30;
+}
+
+entry {
+  background-color: @bg-alt;
+  padding: 12;
+  text-color: @fg;
+}
+
+inputbar {
+  children: [prompt, entry];
+}
+
+listview {
+  background-color: @bg;
+  columns: 1;
+  lines: 4;
+}
+
+mainbox {
+  background-color: @bg;
+  children: [inputbar, listview];
+}
+
+prompt {
+  background-color: @bg-alt;
+  enabled: true;
+  padding: 12 0 0 12;
+  text-color: @fg;
+}

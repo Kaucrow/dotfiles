@@ -1,0 +1,83 @@
+!=============================================================
+!
+!
+!   ██╗  ██╗██████╗ ███████╗███████╗██████╗  ██████╗███████╗
+!   ╚██╗██╔╝██╔══██╗██╔════╝██╔════╝██╔══██╗██╔════╝██╔════╝
+!    ╚███╔╝ ██████╔╝█████╗  ███████╗██████╔╝██║     ███████╗
+!    ██╔██╗ ██╔══██╗██╔══╝  ╚════██║██╔══██╗██║     ╚════██║
+!   ██╔╝ ██╗██║  ██║███████╗███████║██║  ██║╚██████╗███████║
+!   ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝╚═╝  ╚═╝ ╚═════╝╚══════╝
+!          		===Kaucrow - gruvbox-material===
+!
+!==============================================================
+
+!=======================================
+!   -urxvt-
+!=======================================
+
+!! Colorscheme
+
+! special
+! *.foreground: #f1e8bf
+*.foreground: #dfbf8e
+!*.background: #1c2021
+*.background: #282828
+*.cursorColor: #dfbf8e
+
+! black
+*.color0: #282828
+*.color8: #282828
+! red
+*.color1: #ea6962
+*.color9: #ea6962
+! green
+*.color2: #a8b762
+*.color10: #a8b762
+! yellow
+*.color3: #e78a4e
+*.color11: #e78a4e
+! blue
+*.color4: #7daea3
+*.color12: #7daea3
+! magenta
+*.color5: #d3869b
+*.color13: #d3869b
+! cyan
+*.color6: #89b482
+*.color14: #89b482
+! white
+*.color7: #dfbf8e
+*.color15: #dfbf8e
+
+!! Font
+URxvt.font: xft:Hermit:style=Regular:size=8.2, \
+            xft:RobotoMono Nerd Font Mono:style=Regular:size=8, \
+            xft:Braille:style=Regular:size=8
+URxvt.boldFont: xft:Hermit:style=Bold:size=8.2, \
+                xft:Braille:style=Regular:size=8
+URxvt.italicFont: xft:Hermit:style=Italic:size=8.2
+URxvt.boldItalicfont: xft:Hermit:style=Bold Italic:size=8.2
+
+!! Appearance
+URxvt.letterSpace: 0
+URxvt.lineSpace: -1
+!URxvt.geometry: 92x24
+URxvt.internalBorder: 24
+URxvt.cursorBlink: true
+URxvt.cursorUnderline: false
+URxvt.saveline: 2048
+URxvt.scrollBar: false
+URxvt.scrollBar_right: false
+URxvt.urgentOnBell: true
+URxvt.depth: 24
+URxvt.iso14755: false
+
+!! Navigation Keybinds
+URxvt.keysym.Control-k: command:\033]720;1\007
+URxvt.keysym.Control-j: command:\033]721;1\007
+URxvt.keysym.Control-l: \033[1;5C
+URxvt.keysym.Control-h: \033[1;5D
+
+! Restore Copy/Paste
+URxvt.keysym.Shift-Control-C: eval:selection_to_clipboard
+URxvt.keysym.Shift-Control-V: eval:paste_clipboard
