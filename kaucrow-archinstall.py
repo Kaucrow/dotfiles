@@ -13,6 +13,17 @@ class Colors:
     BOLD = '\033[1m';
     UNDERLINE = '\033[4m';
 
+class Disk:
+    def __init__(self, name, size):
+        self.partitions = [];
+        self.name = name;
+        self.size = size;
+
+class Partition:
+    def __init__(self, name, size):
+        self.name = name;
+        self.size = size;
+
 action = "";
 
 def InternetReachable(host="8.8.8.8", port=53, timeout=3):
@@ -56,6 +67,16 @@ def DispOptions(*options):
             return sel;
 
     return -1; 
+
+def GetNthWord(num, line):
+    while(num != 1):
+        next
+        line = line[line.find(' ') + 1:];
+        while(line[0] == ' '):
+            line = line[1:];
+        num -= 1;
+
+    return line[:line.find(' ')];
 
 def Exit(code = 0):
     print('');
@@ -115,8 +136,39 @@ while(sel == - 1):
     DispTitle();
     sel = DispOptions("Partition disk", "Exit");
 
-process = subprocess.Popen(['fdisk', '-l'], stdout=subprocess.PIPE, stderr=subprocess.PIPE);
-out, err = process.communicate();
-print(out);
+match(sel):
+    case 1:
+        disks = [];
+        print("PART");
+        process = subprocess.Popen(['lsblk'], stdout=subprocess.PIPE, stderr=subprocess.PIPE);
+        out, err = process.communicate();
+
+        lsblkOut = out.decode();
+        lsblkOut = lsblkOut[lsblkOut.find('\n') + 1:]; 
+        while(lsblkOut != ''):
+            data = GetNthWord(1, lsblkOut);
+            
+            # If the data is a disk.
+            if (len(data) == len(data.encode())):
+                diskName = data;
+                diskSize = GetNthWord(4, lsblkOut);
+                disks.append(Disk(diskName, diskSize));
+
+            # If the data is a partition.
+            else:
+                partName = data[2:];
+                partSize = GetNthWord(4, lsblkOut);
+                disks[len(disks) - 1].partitions.append(Partition(partName, partSize));
+
+            lsblkOut = lsblkOut[lsblkOut.find('\n') + 1:];
+
+        for disk in disks:
+            print(disk.name + '\t' + disk.size);
+            for partition in disk.partitions:
+                print('-' + partition.name + '\t' + partition.size);
+
+    case 2:
+        print("EXIT");
+
 
 Exit(0);
