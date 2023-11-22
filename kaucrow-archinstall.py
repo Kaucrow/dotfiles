@@ -20,9 +20,11 @@ class Disk:
         self.size = size;
 
 class Partition:
-    def __init__(self, name, size):
+    def __init__(self, name, size, fs):
         self.name = name;
         self.size = size;
+        self.type = "part";
+        self.fs = fs;
 
 action = "";
 
@@ -70,7 +72,6 @@ def DispOptions(*options):
 
 def GetNthWord(num, line):
     while(num != 1):
-        next
         line = line[line.find(' ') + 1:];
         while(line[0] == ' '):
             line = line[1:];
@@ -130,45 +131,70 @@ if not InternetReachable():
 # Update the system clock.
 os.system("timedatectl set-ntp true");
 
-sel = -1;
-while(sel == - 1):
-    os.system("clear");
-    DispTitle();
-    sel = DispOptions("Partition disk", "Exit");
+# Fetch the system disks and partitions.
+disks = [];
+process = subprocess.Popen(["lsblk", "-o", "NAME,SIZE,TYPE,FSTYPE"], stdout=subprocess.PIPE, stderr=subprocess.PIPE);
+out, err = process.communicate();
 
-match(sel):
-    case 1:
-        disks = [];
-        print("PART");
-        process = subprocess.Popen(['lsblk'], stdout=subprocess.PIPE, stderr=subprocess.PIPE);
-        out, err = process.communicate();
+lsblkOut = out.decode();
+lsblkOut = lsblkOut[lsblkOut.find('\n') + 1:]; 
+while(lsblkOut != ''):
+    print(lsblkOut);
+    data = GetNthWord(1, lsblkOut);
+    
+    # If the data is not a partition.
+    if (len(data) == len(data.encode())):
+        diskType = GetNthWord(3, lsblkOut);
 
-        lsblkOut = out.decode();
-        lsblkOut = lsblkOut[lsblkOut.find('\n') + 1:]; 
-        while(lsblkOut != ''):
-            data = GetNthWord(1, lsblkOut);
-            
-            # If the data is a disk.
-            if (len(data) == len(data.encode())):
-                diskName = data;
-                diskSize = GetNthWord(4, lsblkOut);
-                disks.append(Disk(diskName, diskSize));
-
-            # If the data is a partition.
-            else:
-                partName = data[2:];
-                partSize = GetNthWord(4, lsblkOut);
-                disks[len(disks) - 1].partitions.append(Partition(partName, partSize));
-
+        if(diskType != "disk"):
             lsblkOut = lsblkOut[lsblkOut.find('\n') + 1:];
+            continue;
+            
+        diskName = data;
+        diskSize = GetNthWord(2, lsblkOut);
+        #try:
+        #    diskFs = GetNthWord(4, lsblkOut[:lsblkOut.find('\n') + 1]);
+        #except:
+        #    diskFs = "";
+        disks.append(Disk(diskName, diskSize));
 
-        for disk in disks:
-            print(disk.name + '\t' + disk.size);
-            for partition in disk.partitions:
-                print('-' + partition.name + '\t' + partition.size);
+    # If the data is a partition.
+    else:
+        partName = data[2:];
+        partSize = GetNthWord(2, lsblkOut);
+        partFs   = GetNthWord(4, lsblkOut[:lsblkOut.find('\n') + 1]);
+        disks[len(disks) - 1].partitions.append(Partition(partName, partSize, partFs));
 
-    case 2:
-        print("EXIT");
+    lsblkOut = lsblkOut[lsblkOut.find('\n') + 1:];
 
+selDisk = "";
+while(True):
+    sel = -1;
+    while(sel == - 1):
+        os.system("clear");
+        DispTitle();
+        sel = DispOptions("Partition disk", "Exit");
 
-Exit(0);
+    match(sel):
+        case 1:
+            os.system("clear");
+            DispTitle();
+
+            if(selDisk == ""):
+                print("\t*** DISKS ***");
+                print("\tNAME\tSIZE\tTYPE\tFSTYPE");
+                for disk in disks:
+                    print('\t' + disk.name + '\t' + disk.size + "\tdisk");
+                    for partition in disk.partitions:
+                        print("\t-" + partition.name + '\t' + partition.size + "\tpart" + '\t' + partition.fs);
+
+                diskName = input("\nInput the name of the disk to perform the installation on: ");
+                for disk in disks:
+                    if(diskName == disk.name and diskName[0].isalpha()):
+                        selDisk = diskName;
+
+                if(selDisk == ""):
+                    print(Colors.FAIL + "[ ERR ] " + Colors.ENDC + '\"' + diskName + "\" IS NOT A VALID DISK.");
+
+        case 2:
+            Exit(0);
