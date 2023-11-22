@@ -13,21 +13,39 @@ class Colors:
     BOLD = '\033[1m';
     UNDERLINE = '\033[4m';
 
+class Tags:
+    ERR = Colors.FAIL + "[ ERR ] " + Colors.ENDC;
+
 class Disk:
     def __init__(self, name, size):
-        self.partitions = [];
-        self.addPartitions = [];
-        self.delPartitions = [];
+        self.ogParts = [];
+        self.modParts = [];
         self.name = name;
         self.size = size;
+        self.freeBytes = SizeToBytes(size); 
 
-class Partition:
+class Part:
     def __init__(self, name, size, fs):
         self.name = name;
         self.size = size;
-        self.byteSize = 0;
+        self.byteSize = SizeToBytes(size);
         self.type = "part";
         self.fs = fs;
+
+def SizeToBytes(sizeStr):
+    if not (sizeStr[len(sizeStr) - 2].isnumeric()):
+        return -1;
+
+    multiplier = sizeStr[len(sizeStr) - 1].upper();
+    if not (multiplier.isalpha()):
+        return -1;
+
+    rawSize = float(sizeStr[:len(sizeStr) - 1]);
+    if   multiplier == 'G': return (rawSize * 1073741824);
+    elif multiplier == 'M': return (rawSize * 1048576);
+    elif multiplier == 'K': return (rawSize * 1024);
+    else: return -1;
+
 
 action = "";
 
@@ -77,20 +95,9 @@ def DispSelDisk(selDisk):
     print("\t*** SELECTED DISK STATUS ***");
     print("\tNAME\tSIZE\tTYPE\tFSTYPE");
     print('\t' + selDisk.name + '\t' + selDisk.size + "\tdisk");
-    for partition in selDisk.partitions:
-        print("\t-" + partition.name + '\t' + partition.size + "\tpart" + '\t' + partition.fs);
+    for part in selDisk.modParts:
+        print("\t-" + part.name + '\t' + part.size + "\tpart" + '\t' + part.fs);
     print("");
-
-def SizeToBytes(sizeStr):
-    if not (sizeStr[len(sizeStr) - 2].isnumeric()):
-        return -1;
-
-    multiplier = sizeStr[len(sizeStr) - 1].upper();
-    rawSize = int(sizeStr[:len(sizeStr) - 1]);
-    if   multiplier == 'G': return (rawSize * 1073741824);
-    elif multiplier == 'M': return (rawSize * 1048576);
-    elif multiplier == 'K': return (rawSize * 1024);
-    else: return -1;
 
 def GetNthWord(num, line):
     while(num != 1):
@@ -113,7 +120,7 @@ try:
 except:
     os.system("clear");
     DispTitle();
-    print(Colors.FAIL + "\n[ ERR ] " + Colors.ENDC + "The installation image is not running in UEFI mode.");
+    print('\n' + Tags.ERR + "The installation image is not running in UEFI mode.");
     print("\tThe installation cannot proceed.");
     Exit(1);
 
@@ -134,7 +141,7 @@ if not InternetReachable():
                 break;
 
         if(wInterface == ""):
-            print(Colors.FAIL + "\n[ ERR ] " + Colors.ENDC + "No wireless interface was found.");
+            print('\n' + Tags.ERR + "No wireless interface was found.");
             print("\tPlease try to connect manually and re-run the installation script.");
             Exit(1);
 
@@ -174,10 +181,6 @@ while(lsblkOut != ''):
             
         diskName = data;
         diskSize = GetNthWord(2, lsblkOut);
-        #try:
-        #    diskFs = GetNthWord(4, lsblkOut[:lsblkOut.find('\n') + 1]);
-        #except:
-        #    diskFs = "";
         disks.append(Disk(diskName, diskSize));
 
     # If the data is a partition.
@@ -185,7 +188,9 @@ while(lsblkOut != ''):
         partName = data[2:];
         partSize = GetNthWord(2, lsblkOut);
         partFs   = GetNthWord(4, lsblkOut[:lsblkOut.find('\n') + 1]);
-        disks[len(disks) - 1].partitions.append(Partition(partName, partSize, partFs));
+        lastDisk = disks[len(disks) - 1];
+        lastDisk.ogParts.append(Part(partName, partSize, partFs));
+        lastDisk.freeBytes -= lastDisk.ogParts[len(lastDisk.ogParts) - 1].byteSize;
 
     lsblkOut = lsblkOut[lsblkOut.find('\n') + 1:];
 
@@ -195,7 +200,7 @@ while(True):
     while(sel == - 1):
         os.system("clear");
         DispTitle();
-        sel = DispOptions("Partition disk", "Exit");
+        sel = DispOptions("Part disk", "Exit");
 
     match(sel):
         case 1:
@@ -207,16 +212,17 @@ while(True):
                 print("\tNAME\tSIZE\tTYPE\tFSTYPE");
                 for disk in disks:
                     print('\t' + disk.name + '\t' + disk.size + "\tdisk");
-                    for partition in disk.partitions:
+                    for partition in disk.ogParts:
                         print("\t-" + partition.name + '\t' + partition.size + "\tpart" + '\t' + partition.fs);
 
                 diskName = input("\nInput the name of the disk to perform the installation on: ");
                 for disk in disks:
                     if(diskName == disk.name and diskName[0].isalpha()):
                         selDisk = disk;
+                        selDisk.modParts = disk.ogParts;
 
                 if(selDisk.name == ""):
-                    input(Colors.FAIL + "[ ERR ] " + Colors.ENDC + '\"' + diskName + "\" IS NOT A VALID DISK. ");
+                    input(Tags.ERR + '\"' + diskName + "\" is not a valid disk. ");
                     continue;
                 
                 while(True):
@@ -228,16 +234,54 @@ while(True):
                         sel = DispOptions("Add a partition", "Delete a partition", "Finish");
 
                     match(sel):
+                        # Add a partition.
                         case 1:
-                            partSize = SizeToBytes(input("\nPartition size: "));
-                            if(partSize == -1):
-                                print("INVALID PART SIZE");
+                            partSizeStr = input("\nSize (K, M, G): ").upper();
+                            partSizeBytes = SizeToBytes(partSizeStr);
+                            if(partSizeBytes == -1):
+                                input(Tags.ERR + "Invalid partition size. ");
+                                continue;
                             
-                            print(partSize);
-                            input();
+                            if(partSizeBytes <= selDisk.freeBytes):
+                                selDisk.freeBytes -= partSizeBytes;
+                                partName = selDisk.name + str(len(selDisk.modParts) + 1);
+                            else:
+                                input(Tags.ERR + "Not enough space on the selected disk. ");
+                                continue;
+                            
+                            knownPartFs = ["fat32", "ext4", "swap", "ntfs"];
+                            partFs = input("Filesystem (fat32, ext4, swap, ntfs): ").lower();
+                            if(partFs not in knownPartFs):
+                                input(Tags.ERR + "Invalid partition filesystem. ");
+                                continue;
+                            
+                            selDisk.modParts.append(Part(partName, partSizeStr, partFs));
+                        
+                        # Delete a partition.
+                        case 2:
+                            delPartName = input("\nPartition to delete: ");
+                            delPart = Part("", "0B", "");
 
+                            for part in selDisk.modParts:
+
+                                if part.name == delPartName:
+                                    delPart = part;
+                                    continue;
+
+                                if(delPart.name != ""):
+                                    lastChar = part.name[len(part.name) - 1];
+                                    part.name = part.name[:part.name.find(lastChar)] + str((int(lastChar) - 1));
+
+                            if(delPart.name != ""):
+                                selDisk.freeBytes += delPart.byteSize;
+                                selDisk.modParts.remove(delPart);
+                            else:
+                                input(Tags.ERR + "Partition \"" + delPartName + "\" was not found on the selected disk. ");
+                        
+                        # Finish partitioning.
                         case 3:
                             break;
 
+        # Exit program.
         case 2:
             Exit(0);
