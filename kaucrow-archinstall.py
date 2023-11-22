@@ -16,6 +16,8 @@ class Colors:
 class Disk:
     def __init__(self, name, size):
         self.partitions = [];
+        self.addPartitions = [];
+        self.delPartitions = [];
         self.name = name;
         self.size = size;
 
@@ -23,6 +25,7 @@ class Partition:
     def __init__(self, name, size, fs):
         self.name = name;
         self.size = size;
+        self.byteSize = 0;
         self.type = "part";
         self.fs = fs;
 
@@ -68,7 +71,26 @@ def DispOptions(*options):
         if(sel >= 1 and sel <= len(options)):
             return sel;
 
-    return -1; 
+    return -1;
+
+def DispSelDisk(selDisk):
+    print("\t*** SELECTED DISK STATUS ***");
+    print("\tNAME\tSIZE\tTYPE\tFSTYPE");
+    print('\t' + selDisk.name + '\t' + selDisk.size + "\tdisk");
+    for partition in selDisk.partitions:
+        print("\t-" + partition.name + '\t' + partition.size + "\tpart" + '\t' + partition.fs);
+    print("");
+
+def SizeToBytes(sizeStr):
+    if not (sizeStr[len(sizeStr) - 2].isnumeric()):
+        return -1;
+
+    multiplier = sizeStr[len(sizeStr) - 1].upper();
+    rawSize = int(sizeStr[:len(sizeStr) - 1]);
+    if   multiplier == 'G': return (rawSize * 1073741824);
+    elif multiplier == 'M': return (rawSize * 1048576);
+    elif multiplier == 'K': return (rawSize * 1024);
+    else: return -1;
 
 def GetNthWord(num, line):
     while(num != 1):
@@ -167,7 +189,7 @@ while(lsblkOut != ''):
 
     lsblkOut = lsblkOut[lsblkOut.find('\n') + 1:];
 
-selDisk = "";
+selDisk = Disk("", "0B");
 while(True):
     sel = -1;
     while(sel == - 1):
@@ -180,8 +202,8 @@ while(True):
             os.system("clear");
             DispTitle();
 
-            if(selDisk == ""):
-                print("\t*** DISKS ***");
+            if(selDisk.name == ""):
+                print("\t*** AVAILABLE DISKS ***");
                 print("\tNAME\tSIZE\tTYPE\tFSTYPE");
                 for disk in disks:
                     print('\t' + disk.name + '\t' + disk.size + "\tdisk");
@@ -191,10 +213,31 @@ while(True):
                 diskName = input("\nInput the name of the disk to perform the installation on: ");
                 for disk in disks:
                     if(diskName == disk.name and diskName[0].isalpha()):
-                        selDisk = diskName;
+                        selDisk = disk;
 
-                if(selDisk == ""):
-                    print(Colors.FAIL + "[ ERR ] " + Colors.ENDC + '\"' + diskName + "\" IS NOT A VALID DISK.");
+                if(selDisk.name == ""):
+                    input(Colors.FAIL + "[ ERR ] " + Colors.ENDC + '\"' + diskName + "\" IS NOT A VALID DISK. ");
+                    continue;
+                
+                while(True):
+                    sel = -1;
+                    while(sel == -1):
+                        os.system("clear");
+                        DispTitle();
+                        DispSelDisk(selDisk);
+                        sel = DispOptions("Add a partition", "Delete a partition", "Finish");
+
+                    match(sel):
+                        case 1:
+                            partSize = SizeToBytes(input("\nPartition size: "));
+                            if(partSize == -1):
+                                print("INVALID PART SIZE");
+                            
+                            print(partSize);
+                            input();
+
+                        case 3:
+                            break;
 
         case 2:
             Exit(0);
