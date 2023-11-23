@@ -30,6 +30,7 @@ class Part:
         self.size = size;
         self.byteSize = SizeToBytes(size);
         self.type = "part";
+        self.use = "";
         self.fs = fs;
 
 def SizeToBytes(sizeStr):
@@ -46,8 +47,20 @@ def SizeToBytes(sizeStr):
     elif multiplier == 'K': return (rawSize * 1024);
     else: return -1;
 
+def BytesToSize(byteNum):
+    giga = 1073741824;
+    mega = 1048576;
+    kilo = 1024;
 
-action = "";
+    if byteNum >= giga:
+        returnVar = float("{:.1f}".format(byteNum / giga));
+        return str(int(returnVar)) + 'G' if returnVar.is_integer() else str(returnVar) + 'G';
+    elif byteNum >= mega:
+        returnVar = float("{:.1f}".format(byteNum / mega));
+        return str(int(returnVar)) + 'M' if returnVar.is_integer() else str(returnVar) + 'M';
+    else:
+        returnVar = float("{:.1f}".format(byteNum / kilo));
+        return str(int(returnVar)) + 'K' if returnVar.is_integer() else str(returnVar) + 'K';
 
 def InternetReachable(host="8.8.8.8", port=53, timeout=3):
     """
@@ -93,10 +106,10 @@ def DispOptions(*options):
 
 def DispSelDisk(selDisk):
     print("\t*** SELECTED DISK STATUS ***");
-    print("\tNAME\tSIZE\tTYPE\tFSTYPE");
+    print("\tNAME\tSIZE\tTYPE\tFSTYPE\tUSE");
     print('\t' + selDisk.name + '\t' + selDisk.size + "\tdisk");
     for part in selDisk.modParts:
-        print("\t-" + part.name + '\t' + part.size + "\tpart" + '\t' + part.fs);
+        print("\t-" + part.name + '\t' + part.size + "\tpart" + '\t' + part.fs + '\t' + part.use);
     print("");
 
 def GetNthWord(num, line):
@@ -112,6 +125,13 @@ def Exit(code = 0):
     print('');
     exit(code);
 
+# ====================
+# Global Variables
+# ===================
+action = "";
+rootPartName = "";
+homePartName = "";
+swapPartName = "";
 
 # Ensure the arch installation image is running in UEFI mode."
 try:
@@ -200,7 +220,7 @@ while(True):
     while(sel == - 1):
         os.system("clear");
         DispTitle();
-        sel = DispOptions("Part disk", "Exit");
+        sel = DispOptions("Partition the disk", "Begin installation", "Exit");
 
     match(sel):
         case 1:
@@ -231,23 +251,29 @@ while(True):
                         os.system("clear");
                         DispTitle();
                         DispSelDisk(selDisk);
-                        sel = DispOptions("Add a partition", "Delete a partition", "Finish");
+                        sel = DispOptions("Add a partition", "Delete a partition", "Set use", "Finish");
 
                     match(sel):
                         # Add a partition.
                         case 1:
-                            partSizeStr = input("\nSize (K, M, G): ").upper();
-                            partSizeBytes = SizeToBytes(partSizeStr);
-                            if(partSizeBytes == -1):
-                                input(Tags.ERR + "Invalid partition size. ");
-                                continue;
+                            partSizeStr = input("\nSize (K, M, G, or blank for all available space): ").upper();
                             
-                            if(partSizeBytes <= selDisk.freeBytes):
-                                selDisk.freeBytes -= partSizeBytes;
-                                partName = selDisk.name + str(len(selDisk.modParts) + 1);
-                            else:
-                                input(Tags.ERR + "Not enough space on the selected disk. ");
-                                continue;
+                            if partSizeStr == "":
+                                partSizeBytes = selDisk.freeBytes;
+                                partSizeStr = BytesToSize(partSizeBytes);
+
+                            else: 
+                                partSizeBytes = SizeToBytes(partSizeStr);
+                                if(partSizeBytes == -1):
+                                    input(Tags.ERR + "Invalid partition size. ");
+                                    continue;
+                                
+                                if partSizeBytes > selDisk.freeBytes:
+                                    input(Tags.ERR + "Not enough space on the selected disk. ");
+                                    continue;
+
+                            selDisk.freeBytes -= partSizeBytes;
+                            partName = selDisk.name + str(len(selDisk.modParts) + 1);
                             
                             knownPartFs = ["fat32", "ext4", "swap", "ntfs"];
                             partFs = input("Filesystem (fat32, ext4, swap, ntfs): ").lower();
@@ -278,10 +304,64 @@ while(True):
                             else:
                                 input(Tags.ERR + "Partition \"" + delPartName + "\" was not found on the selected disk. ");
                         
-                        # Finish partitioning.
+                        # Set partition use.
                         case 3:
+                            os.system("clear");
+                            DispTitle();
+                            DispSelDisk(selDisk);
+
+                            partName = input("\tPartition name: ");
+                            modPart = Part("", "0B", "");
+                            
+                            for part in selDisk.modParts:
+                                
+                                if part.name == partName:
+                                    modPart = part;
+                                    break;
+
+                            if(modPart.name == ""):
+                                input('\n' + Tags.ERR + "Partition \"" + partName + "\" was not found on the selected disk. ");
+
+                            else:
+                                print("\n\tPartition use")
+                                sel = DispOptions("Root", "Home", "Swap");
+                                if sel == -1: input(Tags.ERR + "Not a valid option. ");
+                                else:
+                                    class Exc:
+                                       useAlreadyAssigned = '\n' + Tags.ERR + "This use has already been assigned to a partition. ";
+                                       fsNotCompat = '\n' + Tags.ERR + "This use cannot be given to a partition of type \"%s\". ";
+                                    try:
+                                        match(sel):
+                                            case 1:
+                                                if modPart.fs != "ext4": raise Exception(Exc.fsNotCompat % (modPart.fs));
+                                                elif rootPartName != "": raise Exception(Exc.useAlreadyAssigned);
+                                                modPart.use = "root";
+                                                rootPartName = modPart.name;
+                                            case 2:
+                                                if modPart.fs != "ext4": raise Exception(Exc.fsNotCompat % (modPart.fs));
+                                                elif rootPartName != "": raise Exception(Exc.useAlreadyAssigned);
+                                                modPart.use = "home";
+                                                homePartName = modPart.name;
+                                            case 3:
+                                                if modPart.fs != "swap": raise Exception(Exc.fsNotCompat % (modPart.fs));
+                                                elif rootPartName != "": raise Exception(Exc.useAlreadyAssigned);
+                                                modPart.use = "swap";
+                                                swapPartName = modPart.name;
+                                    except Exception as exc:
+                                        input(exc);
+
+                        # Finish partitioning.
+                        case 4:
                             break;
 
-        # Exit program.
+        # Perform installation.
         case 2:
+            if(rootPartName == ""):
+                print('\n' + Tags.ERR + "No root partition was specified. The installation cannot proceed.");
+                Exit(1);
+
+            Exit(0);
+
+        # Exit program.
+        case 3:
             Exit(0);
