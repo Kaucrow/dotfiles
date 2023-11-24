@@ -1,6 +1,7 @@
 import os
 import socket
 import subprocess
+import time
 
 class Colors:
     HEADER = '\033[95m';
@@ -176,6 +177,8 @@ def DispOptions(*options):
     sel = 0;
     inputVar = input("\tSelect: ");
 
+    print();
+
     if(inputVar.isdigit()):
 
         sel = int(inputVar);
@@ -206,7 +209,6 @@ def GetNthWord(num, line):
     return line[:line.find(' ')];
 
 def Exit(code = 0):
-    print('');
     exit(code);
 
 # ====================
@@ -350,7 +352,7 @@ while(True):
                 match(sel):
                     # Add a partition.
                     case 1:
-                        partSizeStr = input("\nSize (K, M, G, or blank for all available space): ").upper();
+                        partSizeStr = input("Size (K, M, G, or blank for all available space): ").upper();
                         
                         if partSizeStr == "":
                             partSizeBytes = max(selDisk.freeBytes);
@@ -376,7 +378,7 @@ while(True):
 
                     # Delete a partition.
                     case 2:
-                        delPartName = input("\nPartition to delete: ");
+                        delPartName = input("Partition to delete: ");
                         delPart = None;
 
                         for part in selDisk.parts.mod:
@@ -414,8 +416,8 @@ while(True):
                         if sel == -1: input(Tags.ERR + "Not a valid option. "); continue;
 
                         class Exc:
-                            useAlreadyAssigned = '\n' + Tags.ERR + "This use has already been assigned to a partition. ";
-                            fsNotCompat = '\n' + Tags.ERR + "This use cannot be given to a partition of type \"%s\". ";
+                            useAlreadyAssigned = Tags.ERR + "This use has already been assigned to a partition. ";
+                            fsNotCompat = Tags.ERR + "This use cannot be given to a partition of type \"%s\". ";
                         try:
                             match(sel):
                                 case 1:
@@ -442,17 +444,20 @@ while(True):
 
     # Perform installation.
         case 2:
-            if rootPartName == "":
-                print('\n' + Tags.ERR + "No root partition was specified. The installation cannot proceed.");
+            if rootPartName == None: 
+                print(Tags.ERR + "No root partition was specified. The installation cannot proceed.\n");
                 Exit(1);
 
-            for part in selDisk.ogParts:
-                if part not in selDisk.modParts:
+            for part in selDisk.parts.og:
+                if part not in selDisk.parts.mod:
+                    os.system("echo \"wipefs -a /dev/%s\"" % (part.name));
                     os.system("echo \"d\n%s\nw\" | fdisk /dev/%s" % (part.number, selDisk.name));
+                    time.sleep(1);
 
-            for part in selDisk.modParts:
-                if part not in selDisk.ogParts:
-                    os.system("echo \"n\n%s\n\n+%s\nY\" | fdisk /dev/%s" % (part.number, part.size, selDisk.name));
+            for part in selDisk.parts.mod:
+                if part not in selDisk.parts.og:
+                    os.system("echo \"n\n%s\n\n+%s\nw\" | fdisk /dev/%s" % (part.number, part.size, selDisk.name));
+                    time.sleep(1);
 
             Exit(0);
 
