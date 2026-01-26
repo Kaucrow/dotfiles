@@ -1,0 +1,7 @@
+/* ----------- 💫 https://github.com/JaKooLit 💫 -------- */
+/* swaync colors - wallust from waybar.css */
+
+@import '../../.config/waybar/colors.css';
+/*@import '/home/beentang/Downloads/Rice/Swaync Default Configs/style_ori.css';*/
+@import 'themes/control_center.css';
+@import 'themes/notifications.css';
