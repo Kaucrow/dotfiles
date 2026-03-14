@@ -79,7 +79,6 @@ EOF
 echo "Installing yay packages..."
 YAY_APPS=(
 	visual-studio-code-bin
-	neofetch
 	cava
 	wlogout
     hyprmon-bin
@@ -91,6 +90,7 @@ sudo -u "$USER_NAME" yay -S --needed --noconfirm "${YAY_APPS[@]}"
 echo "Installing additional packages..."
 APPS=(
 	firefox
+    fastfetch
 	htop
 	network-manager-applet
 	git
