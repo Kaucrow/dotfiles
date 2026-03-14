@@ -1,0 +1,20 @@
+{
+    "label" : "lock",
+    "action" : "hyprlock",
+    "keybind" : "l"
+},
+{
+    "label" : "logout",
+    "action" : "loginctl terminate-user $USER",
+    "keybind" : "e"
+},
+{
+    "label" : "reboot",
+    "action" : "reboot",
+    "keybind" : "r"
+},
+{
+    "label" : "shutdown",
+    "action" : "shutdown",
+    "keybind" : "s"
+}

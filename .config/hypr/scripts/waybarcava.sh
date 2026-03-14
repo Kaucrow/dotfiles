@@ -2,6 +2,11 @@
 # /* ---- 💫 https://github.com/JaKooLit 💫 ---- */  ##
 # Not my own work. This was added through Github PR. Credit to original author
 
+# Wait for the audio server to be active
+while ! pactl info > /dev/null 2>&1; do
+	sleep 0.5
+done
+
 #----- Optimized bars animation without much CPU usage increase --------
 bar="▁▂▃▄▅▆▇█"
 dict="s/;//g"

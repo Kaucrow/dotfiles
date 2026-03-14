@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Startpage</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Yomogi&display=swap" rel="stylesheet">
+
+    <style>
+        /* General */
+        body {
+            background-color: #191e1c;
+            color: #d4cfc7;
+            /* JetBrains Mono with system fallbacks */
+            font-family: 'JetBrains Mono', 'JetBrainsMono NF', 'Cascadia Code', 'Courier New', monospace;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        /* Azumanga Greeting */
+        .greeting {
+            /* Handwritten font with cursive fallbacks */
+            font-family: 'Yomogi', 'Segoe Print', 'Comic Sans MS', cursive; 
+            font-size: 5.5rem;
+            margin-bottom: 2.5rem;
+            color: #d4cfc7;
+            text-align: center;
+            letter-spacing: -2px;
+        }
+
+        /* Search Bar */
+        .search-container {
+            width: 100%;
+            max-width: 550px;
+	    margin-bottom: 2.5rem;
+        }
+
+	@media (max-width: 800px) {
+	    .search-container {
+	        margin-bottom: 0;
+	    }
+	}
+
+        .search-container input {
+            width: 100%;
+            background-color: #131615;
+            border: 1px solid #3d3a39;
+            padding: 12px;
+            color: #eee;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        /* Links Grid */
+        .links-grid {
+            display: flex;
+            gap: 6rem;
+        }
+
+        .column h2 {
+            font-size: 1.8rem;
+            font-weight: 500;
+            margin-bottom: 1.2rem;
+            color: #ffffff;
+        }
+
+        .column ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .column ul li {
+            margin-bottom: 0.6rem;
+        }
+
+        .column ul li a {
+            color: #a39e95;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: color 0.15s ease-in-out;
+        }
+
+        .column ul li a:hover {
+            color: #ffffff;
+            text-decoration: underline;
+        }
+
+        /* Mobile adjustments */
+        @media (max-width: 800px) {
+            .links-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 2rem;
+                padding: 20px;
+            }
+            .greeting {
+                font-size: 3.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="greeting">
+        ハローエブリーニャン。
+    </div>
+
+    <div class="search-container">
+        <form action="https://www.google.com/search" method="GET">
+            <input type="text" name="q" placeholder="Search..." autofocus>
+        </form>
+    </div>
+
+    <div class="links-grid">
+        <div class="column">
+            <h2>日本語</h2>
+            <ul>
+                <li><a href="https://jisho.org">Jisho</a></li>
+                <li><a href="https://www.wanikani.com">WaniKani</a></li>
+                <li><a href="https://bunpro.jp">Bunpro</a></li>
+                <li><a href="https://www.satorireader.com">Satori Reader</a></li>
+            </ul>
+        </div>
+
+        <div class="column">
+            <h2>Media</h2>
+            <ul>
+                <li><a href="https://www.youtube.com">YouTube</a></li>
+                <li><a href="https://www.netflix.com">Netflix</a></li>
+                <li><a href="https://news.web.nhk/news/easy/">NHK Easy News</a></li>
+                <li><a href="https://bilingualmanga.org/">Bilingual Manga</a></li>
+            </ul>
+        </div>
+
+        <div class="column">
+            <h2>AI</h2>
+            <ul>
+                <li><a href="https://gemini.google.com">Gemini</a></li>
+                <li><a href="https://chat.deepseek.com">DeepSeek</a></li>
+            </ul>
+        </div>
+
+        <div class="column">
+            <h2>Workspace</h2>
+            <ul>
+                <li><a href="https://mail.google.com">Gmail</a></li>
+                <li><a href="https://github.com">GitHub</a></li>
+            </ul>
+        </div>
+    </div>
+
+</body>
+</html>

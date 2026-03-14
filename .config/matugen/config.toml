@@ -1,16 +1,15 @@
 [config.wallpaper]
-command = "swww"
-arguments = ["img", "--transition-type", "any", "--transition-fps", "60"]
+command = "swww img {{ image }} --transition-type any --transition-fps 60"
 set = true
 
 [templates.waybar]
 input_path = '~/.config/matugen/templates/colors.css'
 output_path = '~/.config/waybar/colors.css'
-post_hook = 'pkill -SIGUSR2 waybar'
+post_hook = 'pkill -SIGUSR2 waybar && swaync-client -rs'
 
 [templates.kitty]
 input_path = '~/.config/matugen/templates/kitty-colors.conf'
-output_path = '~/.config/kitty/colors.conf'
+output_path = '~/.config/kitty/kitty.conf'
 post_hook = "kill -SIGUSR1 $(pidof kitty)"
 
 [templates.hyprland]
@@ -42,4 +41,3 @@ output_path = '~/.config/spicetify/Themes/text/color.ini'
 [templates.vesktop]
 input_path = '~/.config/matugen/templates/midnight-discord.css'
 output_path = '~/.config/vesktop/themes/matugen.css'
-
