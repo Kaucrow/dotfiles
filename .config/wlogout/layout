@@ -10,11 +10,11 @@
 },
 {
     "label" : "reboot",
-    "action" : "reboot",
+    "action" : "systemctl reboot",
     "keybind" : "r"
 },
 {
     "label" : "shutdown",
-    "action" : "shutdown",
+    "action" : "systemctl poweroff",
     "keybind" : "s"
 }

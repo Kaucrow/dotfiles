@@ -10,13 +10,13 @@
     
     <style>
         :root {
-            --bg: #131413;
-            --bg-alt: #1f201f;
-            --fg: #e4e2e1;
-            --fg-dim: #c2c8c5;
-            --primary: #b5cbc5;
-            --accent: #c8c4d9;
-            --border: #424846;
+            --bg: {{colors.surface.default.hex}};
+            --bg-alt: {{colors.surface_container.default.hex}};
+            --fg: {{colors.on_surface.default.hex}};
+            --fg-dim: {{colors.on_surface_variant.default.hex}};
+            --primary: {{colors.primary.default.hex}};
+            --accent: {{colors.tertiary.default.hex}};
+            --border: {{colors.outline_variant.default.hex}};
         }
 
         body {
@@ -61,7 +61,7 @@
 
         .search-container input:focus {
             border-color: var(--primary);
-            box-shadow: 0 0 10px #b5cbc544; /* Added a subtle glow */
+            box-shadow: 0 0 10px {{colors.primary.default.hex}}44; /* Added a subtle glow */
         }
 
         .links-grid {

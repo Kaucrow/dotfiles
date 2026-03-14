@@ -111,6 +111,10 @@ APPS=(
 	blueman
     imagemagick
     7zip
+    jq
+    grim
+    slurp
+    wl-clipboard
 )
 pacman -S --needed --noconfirm "${APPS[@]}"
 systemctl enable --now tlp
