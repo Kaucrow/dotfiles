@@ -27,6 +27,10 @@
     "syntax.bracket4": "#83c092"
   },
   "workbench.colorCustomizations": {
+    "list.errorForeground": "#ffb4ab",
+    "list.warningForeground": "#dbbc7f",
+    "gitDecoration.modifiedResourceForeground": "#7fbbb3",
+    "gitDecoration.untrackedResourceForeground": "#dbbc7f",
     "editorInlayHint.background": "#00000000",
     "background": "{{colors.surface.default.hex}}",
     "terminal.background": "{{colors.surface.default.hex}}",
