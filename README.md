@@ -5,12 +5,13 @@ Welcome to my Arch dotfiles owo
 This is a Hyprland-based setup designed to be fast, minimal, and dynamic. The heart of this rice is Matugen, which handles all the color generation to make sure everything from the status bar to the terminal stays perfectly in sync with the active wallpaper.
 
 <div>
-  <a href="#packages"><kbd> Packages </kbd></a>&ensp;&ensp;
-  <a href="#showcase"><kbd> Showcase </kbd></a>&ensp;&ensp;
-  <a href="#installation--usage"><kbd> Installation </kbd></a>&ensp;&ensp;
+  <a href="#packages"><kbd><br> Packages <br></kbd></a>&ensp;&ensp;
+  <a href="#showcase"><kbd><br> Showcase <br></kbd></a>&ensp;&ensp;
+  <a href="#installation--usage"><kbd><br> Installation <br></kbd></a>&ensp;&ensp;
+  <a href="#credits"><kbd><br> Credits <br></kbd></a>&ensp;&ensp;
 </div>
 
-### Packages
+## Packages
 - WM: [hyprland](https://github.com/hyprwm/Hyprland)
 - Bar: [waybar](https://github.com/Alexays/Waybar)
 - Terminal emulator: [kitty](https://github.com/kovidgoyal/kitty)
@@ -27,7 +28,7 @@ This is a Hyprland-based setup designed to be fast, minimal, and dynamic. The he
 - Audio visualizer: [cava](https://github.com/karlstav/cava)
 - Clock: [tty-clock](https://github.com/xorg62/tty-clock)
 
-### Showcase
+## Showcase
 ![main](./showcase/main.jpg)
 ![code](./showcase/code.jpg)
 ![notifs](./showcase/notifs.jpg)
@@ -35,8 +36,7 @@ This is a Hyprland-based setup designed to be fast, minimal, and dynamic. The he
 ![rofi](./showcase/rofi.jpg)
 ![lockscreen](./showcase/lockscreen.jpg)
 
-### Installation & Usage
-
+## Installation & Usage
 To get these dots running on a fresh Arch install, from a root shell with network access:
 
 1. Clone the repo
@@ -64,3 +64,6 @@ Take in mind that the script may ask you to input the user password a few times 
 After the setup is complete, reboot, log into the system, and press Super + W to choose a wallpaper and complete the theming.
 
 Feel free to reach out to me if you have any questions or suggestions :)
+
+## Credits
+Special thanks to [LierB](https://github.com/LierB) & [JaKooLit](https://github.com/JaKooLit), on whose dotfiles mine were based.
