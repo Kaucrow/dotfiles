@@ -8,7 +8,7 @@ This is a Hyprland-based setup designed to be fast, minimal, and dynamic. The he
   <a href="#packages"><kbd><br> Packages <br></kbd></a>&ensp;&ensp;
   <a href="#showcase"><kbd><br> Showcase <br></kbd></a>&ensp;&ensp;
   <a href="#installation--usage"><kbd><br> Installation <br></kbd></a>&ensp;&ensp;
-  <a href="#credits"><kbd><br> Credits <br></kbd></a>&ensp;&ensp;
+  <a href="#credits"><kbd><br> Credits <br></kbd></a>
 </div>
 
 ## Packages
