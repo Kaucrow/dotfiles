@@ -5,12 +5,11 @@ Welcome to my Arch dotfiles owo
 This is a Hyprland-based setup designed to be fast, minimal, and dynamic. The heart of this rice is Matugen, which handles all the color generation to make sure everything from the status bar to the terminal stays perfectly in sync with the active wallpaper.
 
 <div align="left">
-  <br>
-  <a href="#packages"><kbd><br> Packages <br></kbd></a>&ensp;&ensp;
-  <a href="#showcase"><kbd><br> Showcase <br></kbd></a>&ensp;&ensp;
-  <a href="#installation--usage"><kbd><br> Installation <br></kbd></a>&ensp;&ensp;
-  <a href="#credits"><kbd><br> Credits <br></kbd></a>
-  <br>
+<br>
+  <a href="#packages"><kbd> <br> Packages <br> </kbd></a>&ensp;&ensp;
+  <a href="#showcase"><kbd> <br> Showcase <br> </kbd></a>&ensp;&ensp;
+  <a href="#installation--usage"><kbd> <br> Installation <br> </kbd></a>&ensp;&ensp;
+  <a href="#credits"><kbd> <br> Credits <br> </kbd></a> <br>
 </div>
 
 ## Packages
