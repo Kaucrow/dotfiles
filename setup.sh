@@ -83,6 +83,7 @@ YAY_APPS=(
 	wlogout
     hyprmon-bin
     rose-pine-cursor
+    xwaylandvideobridge
 )
 sudo -u "$USER_NAME" yay -S --needed --noconfirm "${YAY_APPS[@]}"
 
@@ -115,6 +116,10 @@ APPS=(
     grim
     slurp
     wl-clipboard
+    xdg-desktop-portal-hyprland
+    adw-gtk-theme
+    man
+    pcmanfm
 )
 pacman -S --needed --noconfirm "${APPS[@]}"
 systemctl enable --now tlp
@@ -149,12 +154,9 @@ systemctl enable ly@tty2.service
 systemctl disable getty@tty2.service
 
 # Get dotfiles 
-echo "Getting dotfiles..."
-git clone https://github.com/Kaucrow/dotfiles.git /tmp/dotfiles
 echo "Copying dotfiles..."
-cp -r /tmp/dotfiles/.config /home/"$USER_NAME"/.config/.
-cp -r /tmp/dotfiles/.scripts /home/"$USER_NAME"/.scripts
-cp /tmp/dotfiles/.bashrc /home/"$USER_NAME"/.bashrc
+cp -r ./.config /home/"$USER_NAME"/.config/.
+cp ./.bashrc /home/"$USER_NAME"/.bashrc
 mkdir -p /home/"$USER_NAME"/Pictures
 cp -r /tmp/dotfiles/wallpapers /home/"$USER_NAME"/Pictures
 
@@ -162,7 +164,6 @@ cp -r /tmp/dotfiles/wallpapers /home/"$USER_NAME"/Pictures
 echo "Finishing dotfiles setup..."
 find /home/"$USER_NAME"/.scripts -name "*.sh" -exec chmod +x {} \;
 chown -R "$USER_NAME":"$USER_NAME" /home/"$USER_NAME"/.config/
-chown -R "$USER_NAME":"$USER_NAME" /home/"$USER_NAME"/.scripts
 chown "$USER_NAME":"$USER_NAME" /home/"$USER_NAME"/.bashrc
 
 # Cleanup

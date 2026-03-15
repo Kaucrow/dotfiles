@@ -14,20 +14,19 @@
     "error": "{{colors.error.default.hex}}",
     "errorForeground": "{{colors.on_error.default.hex}}",
     "syntax.comment": "{{colors.outline.default.hex}}",
-    "syntax.keyword": "#e67e80",
-    "syntax.string": "#a7c080",
+    "syntax.keyword": "{{colors.tertiary.default.hex}}",
+    "syntax.string": "{{colors.primary.default.hex}}",
     "syntax.variable": "{{colors.on_surface.default.hex}}",
-    "syntax.function": "#7fbbb3",
-    "syntax.property": "{{colors.on_surface.default.hex}}",
-    "syntax.constant": "#e69875",
-    "syntax.attribute": "#dbbc7f",
-    "syntax.bracket1": "#d699b6",
-    "syntax.bracket2": "#7fbbb3",
-    "syntax.bracket3": "#dbbc7f",
-    "syntax.bracket4": "#83c092"
+    "syntax.function": "{{colors.secondary.default.hex}}",
+    "syntax.property": "{{colors.secondary.default.hex}}",
+    "syntax.constant": "{{colors.error.default.hex}}",
+    "syntax.attribute": "{{colors.primary_container.default.hex}}",
+    "syntax.bracket1": "{{colors.primary.default.hex}}",
+    "syntax.bracket2": "{{colors.tertiary.default.hex}}",
+    "syntax.bracket3": "{{colors.secondary.default.hex}}",
+    "syntax.bracket4": "{{colors.error.default.hex}}"
   },
   "workbench.colorCustomizations": {
-    "editorInlayHint.background": "#00000000",
     "background": "{{colors.surface.default.hex}}",
     "terminal.background": "{{colors.surface.default.hex}}",
     "terminal.foreground": "{{colors.on_surface.default.hex}}",
@@ -45,19 +44,5 @@
     "terminal.ansiMagenta": "{{colors.on_secondary_container.default.hex}}",
     "terminal.ansiCyan":    "{{colors.secondary.default.hex}}",
     "terminal.ansiWhite":   "{{colors.on_surface.default.hex}}"
-  },
-  "editor.tokenColorCustomizations": {
-    "textMateRules": [
-      {
-        "scope": [
-          "entity.name.namespace",
-          "storage.modifier.path.rust",
-          "entity.name.type.module"
-        ],
-        "settings": {
-          "foreground": "#dbbc7f"
-        }
-      }
-    ]
   }
 }

@@ -4,8 +4,9 @@
 
 # Wait for the audio server to be active
 while ! pactl info > /dev/null 2>&1; do
-	sleep 0.5
+    sleep 1
 done
+sleep 2
 
 #----- Optimized bars animation without much CPU usage increase --------
 bar="▁▂▃▄▅▆▇█"

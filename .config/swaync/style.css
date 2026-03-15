@@ -188,3 +188,19 @@
 .widget-buttons-grid > flowbox > flowboxchild > button:hover label {
     color: @on_primary;
 }
+
+scrollbar,
+scrollbar button,
+scrollbar slider,
+scrollbar trough {
+    display: none;
+    opacity: 0;
+    width: 0;
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+
+list {
+    background-color: transparent;
+}
