@@ -140,6 +140,7 @@ FONTS=(
 	ttf-jetbrains-mono-nerd
 	noto-fonts-cjk
 	ttf-dejavu
+    otf-font-awesome
 )
 pacman -S --needed --noconfirm "${FONTS[@]}"
 
