@@ -90,6 +90,7 @@ sudo -u "$USER_NAME" yay -S --needed --noconfirm "${YAY_APPS[@]}"
 # Install additional packages
 echo "Installing additional packages..."
 APPS=(
+    stow
 	firefox
     fastfetch
 	htop
@@ -141,6 +142,7 @@ FONTS=(
 	noto-fonts-cjk
 	ttf-dejavu
     otf-font-awesome
+    noto-fonts-emoji
 )
 pacman -S --needed --noconfirm "${FONTS[@]}"
 
@@ -156,16 +158,28 @@ systemctl disable getty@tty2.service
 
 # Get dotfiles 
 echo "Copying dotfiles..."
-cp -r ./.config /home/"$USER_NAME"/.config/.
-cp ./.bashrc /home/"$USER_NAME"/.bashrc
-mkdir -p /home/"$USER_NAME"/Pictures
-cp -r /tmp/dotfiles/wallpapers /home/"$USER_NAME"/Pictures
 
-# Setup dotfiles
-echo "Finishing dotfiles setup..."
-find /home/"$USER_NAME"/.scripts -name "*.sh" -exec chmod +x {} \;
-chown -R "$USER_NAME":"$USER_NAME" /home/"$USER_NAME"/.config/
-chown "$USER_NAME":"$USER_NAME" /home/"$USER_NAME"/.bashrc
+DOTFILES_DIR="/home/$USER_NAME/Dotfiles"
+
+mkdir -p "$DOTFILES_DIR"
+cp -r . "$DOTFILES_DIR/"
+
+chown -R "$USER_NAME:$USER_NAME" "$DOTFILES_DIR"
+
+sudo -u "$USER_NAME" mkdir -p "/home/$USER_NAME/Pictures"
+sudo -u "$USER_NAME" ln -s "$DOTFILES_DIR/wallpapers" "/home/$USER_NAME/Pictures/wallpapers"
+
+# Symlink dotfiles with stow
+echo "Symlinking dotfiles with stow..."
+sudo -u "$USER_NAME" bash <<EOF
+    cd "$DOTFILES_DIR"
+    rm -f ~/.bashrc
+    stow -vt ~ .
+EOF
+
+# Add execute permission to scripts
+echo "Adding execute permissions to scripts..."
+find "$DOTFILES_DIR" -name "*.sh" -exec chmod +x {} \;
 
 # Cleanup
 echo "Cleaning up..."

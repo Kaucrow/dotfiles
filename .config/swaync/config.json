@@ -19,11 +19,12 @@
   "notification-window-width": 400,
   "notification-margin-bottom": 100,
   "notification-margin-left": 0,
+  "notification-window-selection": false,
   "positionX": "right",
   "positionY": "top",
-  "timeout": 10,
+  "timeout": 3,
   "timeout-critical": 0,
-  "timeout-low": 5,
+  "timeout-low": 1,
   "transition-time": 200,
 
   "widgets": [

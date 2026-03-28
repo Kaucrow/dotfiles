@@ -115,7 +115,9 @@
 // This is a custom cava visualizer
 "custom/cava_mviz": {
 	"exec": "$HOME/.config/hypr/scripts/waybarcava.sh",
-	"format": "{}"
+	"format": "{}",
+	"on-click": "playerctl play-pause",
+	"on-click-right": "playerctl next",
 },
 
 "custom/playerctl": {
@@ -123,8 +125,7 @@
 	"return-type": "json",
 	"max-length": 25,
 	"exec": "playerctl -a metadata --format '{\"text\": \"{{artist}}  {{markup_escape(title)}}\", \"tooltip\": \"{{playerName}} : {{markup_escape(title)}}\", \"alt\": \"{{status}}\", \"class\": \"{{status}}\"}' -F",
-	"on-click-middle": "playerctl play-pause",
-	"on-click": "playerctl previous",
+	"on-click": "playerctl play-pause",
 	"on-click-right": "playerctl next",
 	"scroll-step": 5.0,
 	"on-scroll-up": "$HOME/.config/hypr/scripts/volume.sh --inc",

@@ -1,0 +1,9 @@
+.git
+.gitignore
+.stow-local-ignore
+LICENSE
+README.md
+setup.sh
+fonts
+showcase
+wallpapers
