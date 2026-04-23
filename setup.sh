@@ -84,6 +84,7 @@ YAY_APPS=(
     hyprmon-bin
     rose-pine-cursor
     xwaylandvideobridge
+    ttf-ms-fonts
 )
 sudo -u "$USER_NAME" yay -S --needed --noconfirm "${YAY_APPS[@]}"
 

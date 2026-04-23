@@ -22,3 +22,11 @@ alias mpvmus='mpv --no-video --cache-secs=150'
 export EDITOR='/usr/bin/nvim'
 PS1='\[\033[1;36m\][\u@\W]\$\[\033[1;37m\] '
 . "$HOME/.cargo/env"
+
+# pnpm
+export PNPM_HOME="/home/kaucrow/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
